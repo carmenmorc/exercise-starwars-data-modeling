@@ -6,27 +6,38 @@ from sqlalchemy import create_engine
 from eralchemy2 import render_er
 
 Base = declarative_base()
+    
+class Usuario(Base):
+    __tablename__ = 'Usuario'
+    ID = Column(Integer, primary_key=True)
+    contrasena = Column(String(20))
+    username = Column(String(12))
+    nombre = Column(String(10))
+    apellidos = Column(String(15))
+    email = Column(String(25))
+    favoritos = Column(Integer, ForeignKey('Favoritos.id_favorito'))
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+class Favoritos(Base):
+    __tablename__ = 'Favoritos'
+    id_favorito = Column(Integer, primary_key=True)
+    id_planeta = Column(Integer, ForeignKey('Planeta.id_planeta'), nullable=True)
+    id_personaje = Column(Integer, ForeignKey('Personaje.id_personaje'), nullable=True)
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+class Planeta(Base):
+    __tablename__ = 'Planeta'
+    id_planeta = Column(Integer, primary_key=True)
+    nombre = Column(String(25))
+    descripcion = Column(String(2000))
+    foto = Column(String)
 
-    def to_dict(self):
-        return {}
+class Personaje(Base):
+    __tablename__ = 'Personaje'
+    id_personaje = Column(Integer, primary_key=True)
+    nombre = Column(String(25))
+    descripcion = Column(String(2000))
+    foto = Column(String)
+
+
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
